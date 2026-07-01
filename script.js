@@ -105,4 +105,93 @@
     }
   });
 
+  // Mystery Box modal
+  const mysteryBtn = document.getElementById('mysteryBtn');
+  const mysteryModal = document.getElementById('mysteryModal');
+  const closeMystery = document.getElementById('closeMystery');
+  const tabArt = document.getElementById('tabArt');
+  const tabRiddle = document.getElementById('tabRiddle');
+  const tabDot = document.getElementById('tabDot');
+  const panelArt = document.getElementById('panelArt');
+  const panelRiddle = document.getElementById('panelRiddle');
+  const panelDot = document.getElementById('panelDot');
+
+  function openMystery(){
+    mysteryModal.removeAttribute('aria-hidden');
+    mysteryModal.style.display = 'flex';
+    showPanel('art');
+  }
+  function closeMyst(){
+    mysteryModal.setAttribute('aria-hidden','true');
+    mysteryModal.style.display = 'none';
+  }
+
+  mysteryBtn.addEventListener('click', openMystery);
+  closeMystery.addEventListener('click', closeMyst);
+  window.addEventListener('keydown', (e)=>{ if(e.key==='m' || e.key==='M') openMystery(); if(e.key==='Escape') closeMyst(); });
+
+  function showPanel(name){
+    panelArt.hidden = panelRiddle.hidden = panelDot.hidden = true;
+    if(name === 'art') panelArt.hidden = false;
+    if(name === 'riddle') panelRiddle.hidden = false;
+    if(name === 'dot') panelDot.hidden = false;
+  }
+  tabArt.addEventListener('click', ()=>showPanel('art'));
+  tabRiddle.addEventListener('click', ()=>showPanel('riddle'));
+  tabDot.addEventListener('click', ()=>showPanel('dot'));
+
+  // Generative art on canvas
+  const artCanvas = document.getElementById('artCanvas');
+  const seedInput = document.getElementById('seedInput');
+  const artCtx = artCanvas.getContext && artCanvas.getContext('2d');
+  function hashString(s){ let h=0; for(let i=0;i<s.length;i++){h = ((h<<5)-h) + s.charCodeAt(i); h |= 0;} return Math.abs(h);
+  }
+  function drawArt(seed){
+    if(!artCtx) return;
+    const w = artCanvas.width; const h = artCanvas.height;
+    artCtx.clearRect(0,0,w,h);
+    const base = seed || String(Date.now());
+    const s = hashString(base);
+    const cols = 6 + (s % 6);
+    for(let i=0;i<cols;i++){
+      const t = (s + i*31) % 360;
+      artCtx.fillStyle = `hsl(${t},60%,55%)`;
+      artCtx.beginPath();
+      const cx = w * (0.2 + 0.6 * Math.abs(Math.sin((s+i)*0.001)));
+      const cy = h * (0.3 + 0.4 * Math.abs(Math.cos((s+i)*0.001)));
+      const r = 30 + ((s >> i) & 127);
+      artCtx.arc(cx + (i-cols/2)*40, cy + Math.sin(i+ s*0.0001)*30, r, 0, Math.PI*2);
+      artCtx.fill();
+    }
+    // overlay lines
+    artCtx.strokeStyle = 'rgba(255,255,255,0.08)'; artCtx.lineWidth = 1;
+    for(let i=0;i<60;i++){
+      artCtx.beginPath(); artCtx.moveTo(0, h*(i/60)); artCtx.lineTo(w, h*(i/60)); artCtx.stroke();
+    }
+  }
+  artCanvas.addEventListener('click', ()=> drawArt(seedInput.value || String(Math.random())));
+  // initial draw
+  drawArt(seedInput.value || 'curiosity');
+
+  // Riddle reveal
+  const revealRiddle = document.getElementById('revealRiddle');
+  const riddleAnswer = document.getElementById('riddleAnswer');
+  revealRiddle.addEventListener('click', ()=>{ riddleAnswer.hidden = false; showToast('You found the answer!'); createConfettiBurst(Math.random(), 32); });
+
+  // Hidden dot game
+  const dotGame = document.getElementById('dotGame');
+  function makeDotGame(cols = 12, rows = 8){
+    dotGame.innerHTML = '';
+    const total = cols * rows;
+    const hiddenIndex = Math.floor(Math.random() * total);
+    for(let i=0;i<total;i++){
+      const d = document.createElement('div'); d.className = 'dot';
+      if(i === hiddenIndex){ d.classList.add('hiddenDot'); d.addEventListener('click', ()=>{ showToast('You found the tiny dot!'); createConfettiBurst(Math.random(), 40); closeMyst(); }); }
+      else d.addEventListener('click', ()=>{ d.style.transform = 'scale(0.95)'; setTimeout(()=>d.style.transform='scale(1)',200); });
+      dotGame.appendChild(d);
+    }
+  }
+  makeDotGame();
+
+
 })();

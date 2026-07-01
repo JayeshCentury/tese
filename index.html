@@ -16,6 +16,7 @@
             <button id="surprise" class="btn primary">Surprise me</button>
             <button id="themeToggle" class="btn">Toggle theme</button>
             <button id="inspire" class="btn">Inspire me</button>
+            <button id="mysteryBtn" class="btn">Mystery Box</button>
           </div>
           <div class="right-controls">
             <label class="clock" aria-hidden="false"><span id="clock">--:--</span></label>
@@ -47,6 +48,38 @@
     </main>
 
     <div id="confetti" aria-hidden="true"></div>
+
+    <div id="mysteryModal" class="modal" aria-hidden="true">
+      <div class="modal-inner">
+        <header class="modal-header">
+          <h2> Mystery Box</h2>
+          <div class="modal-actions">
+            <button id="tabArt" class="btn small">Art</button>
+            <button id="tabRiddle" class="btn small">Riddle</button>
+            <button id="tabDot" class="btn small">Find the Dot</button>
+            <button id="closeMystery" class="btn small">Close</button>
+          </div>
+        </header>
+        <section class="modal-body">
+          <div id="panelArt" class="panel">
+            <label>Enter a word (or leave blank): <input id="seedInput" placeholder="curiosity" /></label>
+            <canvas id="artCanvas" width="640" height="360"></canvas>
+            <div class="hint">Click the canvas to regenerate.</div>
+          </div>
+
+          <div id="panelRiddle" class="panel" hidden>
+            <div id="riddleText" class="riddle">I speak without a mouth and hear without ears. I have nobody, but I come alive with wind. What am I?</div>
+            <button id="revealRiddle" class="btn">Reveal answer</button>
+            <div id="riddleAnswer" class="answer" hidden>Echo</div>
+          </div>
+
+          <div id="panelDot" class="panel" hidden>
+            <div id="dotGame" class="dotGame" aria-label="Find the hidden dot"></div>
+            <div class="hint">One tiny dot is different — can you find and click it?</div>
+          </div>
+        </section>
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
