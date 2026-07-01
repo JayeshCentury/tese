@@ -8,6 +8,7 @@ A professional drawing application with advanced features like undo/redo, artist
 - **Color harmony generator**: Complementary, analogous, triadic color suggestions
 - **Smart history**: Full undo/redo with visual state management
 - **Visual aids**: Grid overlay toggle, smooth line modes
+- **Design gallery**: 6 pre-made templates (geometric, gradient, circles, triangles, cosmic, nature)
 - **Particle effects system**: Dynamic, responsive particles
 - **Keyboard shortcuts**: Quick access to all tools (Z=undo, C=clear, G=grid, etc.)
 - **Download artwork**: Save creations as PNG
@@ -36,12 +37,14 @@ python3 -m http.server 8000
 ```
 
 1. Start drawing on the canvas
-2. Switch brushes and colors easily
-3. Experiment with blend modes and opacity
-4. Use harmony suggestions for color inspiration
-5. Press `?` or click "Shortcuts" to see all keyboard commands
-6. Undo/Redo as much as you like
-7. Download your final artwork
+2. Click "🖼 Gallery" to explore design templates
+3. Load a template as a starting point
+4. Switch brushes and colors easily
+5. Experiment with blend modes and opacity
+6. Use harmony suggestions for color inspiration
+7. Press `?` or click "Shortcuts" to see all keyboard commands
+8. Undo/Redo as much as you like
+9. Download your final artwork
 
 **Enjoy creating!** 🎨✨
 
