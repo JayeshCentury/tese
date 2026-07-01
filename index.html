@@ -12,8 +12,15 @@
         <h1 class="title">Make Something Good</h1>
         <p class="subtitle">A tiny interactive HTML demo — click the buttons and enjoy.</p>
         <div class="controls">
-          <button id="surprise" class="btn primary">Surprise me</button>
-          <button id="themeToggle" class="btn">Toggle theme</button>
+          <div class="left-controls">
+            <button id="surprise" class="btn primary">Surprise me</button>
+            <button id="themeToggle" class="btn">Toggle theme</button>
+            <button id="inspire" class="btn">Inspire me</button>
+          </div>
+          <div class="right-controls">
+            <label class="clock" aria-hidden="false"><span id="clock">--:--</span></label>
+            <input id="accentPicker" type="color" title="Pick accent color" aria-label="Accent color picker" />
+          </div>
         </div>
       </header>
 
@@ -30,6 +37,10 @@
           <h3>Playful</h3>
           <p>Micro-interactions and a small confetti effect.</p>
         </article>
+      </section>
+
+      <section class="quoteWrap">
+        <div id="quote" class="quote" aria-live="polite">Click "Inspire me" for a short thought.</div>
       </section>
 
       <footer class="foot">Made with care · Try the "Surprise me" button</footer>
