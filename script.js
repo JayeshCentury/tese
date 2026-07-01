@@ -17,6 +17,10 @@
   const shortcutsBtn = document.getElementById('shortcutsBtn');
   const shortcutsModal = document.getElementById('shortcutsModal');
   const closeShortcuts = document.getElementById('closeShortcuts');
+  const galleryBtn = document.getElementById('galleryBtn');
+  const galleryModal = document.getElementById('galleryModal');
+  const closeGallery = document.getElementById('closeGallery');
+  const galleryGrid = document.getElementById('galleryGrid');
   const gridOverlay = document.getElementById('gridOverlay');
   const overlayHint = document.querySelector('.overlay-hint');
   const brushBtns = document.querySelectorAll('.brush-btn');
@@ -139,6 +143,179 @@
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
+
+  // Design gallery generators
+  const designTemplates = [
+    {
+      name: 'Geometric Grid',
+      draw: (canvas) => {
+        const c = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        c.fillStyle = '#0f0c29';
+        c.fillRect(0, 0, w, h);
+        c.strokeStyle = '#ff6b6b';
+        c.lineWidth = 2;
+        for (let i = 0; i <= w; i += 40) {
+          for (let j = 0; j <= h; j += 40) {
+            c.strokeRect(i, j, 40, 40);
+          }
+        }
+        c.fillStyle = '#4d96ff';
+        for (let i = 0; i < 5; i++) {
+          c.beginPath();
+          c.arc(Math.random() * w, Math.random() * h, Math.random() * 15 + 5, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+    },
+    {
+      name: 'Gradient Wave',
+      draw: (canvas) => {
+        const c = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        const grad = c.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, '#ff6b6b');
+        grad.addColorStop(0.5, '#4d96ff');
+        grad.addColorStop(1, '#06d6a0');
+        c.fillStyle = grad;
+        c.fillRect(0, 0, w, h);
+        c.strokeStyle = 'rgba(255,255,255,0.2)';
+        c.lineWidth = 3;
+        for (let i = 0; i < 5; i++) {
+          c.beginPath();
+          c.moveTo(0, h / 5 * i);
+          for (let x = 0; x < w; x += 20) {
+            const y = h / 5 * i + Math.sin(x * 0.01 + i) * 20;
+            c.lineTo(x, y);
+          }
+          c.stroke();
+        }
+      }
+    },
+    {
+      name: 'Circle Burst',
+      draw: (canvas) => {
+        const c = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        c.fillStyle = '#0f0c29';
+        c.fillRect(0, 0, w, h);
+        const cx = w / 2, cy = h / 2;
+        const colors = ['#ff6b6b', '#ffd166', '#06d6a0', '#4d96ff', '#b388ff'];
+        for (let i = 0; i < 20; i++) {
+          const r = (i * 15);
+          c.strokeStyle = colors[i % colors.length];
+          c.lineWidth = 3;
+          c.globalAlpha = 0.7 - i * 0.03;
+          c.beginPath();
+          c.arc(cx, cy, r, 0, Math.PI * 2);
+          c.stroke();
+        }
+        c.globalAlpha = 1;
+      }
+    },
+    {
+      name: 'Triangular Art',
+      draw: (canvas) => {
+        const c = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        c.fillStyle = '#0b1220';
+        c.fillRect(0, 0, w, h);
+        const colors = ['#ff6b6b', '#ffd166', '#06d6a0', '#4d96ff', '#b388ff', '#ff9de2'];
+        for (let i = 0; i < 15; i++) {
+          c.fillStyle = colors[i % colors.length];
+          c.globalAlpha = 0.6;
+          const x = Math.random() * w;
+          const y = Math.random() * h;
+          const size = Math.random() * 50 + 20;
+          c.beginPath();
+          c.moveTo(x, y - size);
+          c.lineTo(x - size, y + size);
+          c.lineTo(x + size, y + size);
+          c.closePath();
+          c.fill();
+        }
+        c.globalAlpha = 1;
+      }
+    },
+    {
+      name: 'Cosmic Dots',
+      draw: (canvas) => {
+        const c = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        const grad = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.hypot(w, h));
+        grad.addColorStop(0, '#1a1a3e');
+        grad.addColorStop(1, '#0f0c29');
+        c.fillStyle = grad;
+        c.fillRect(0, 0, w, h);
+        const colors = ['#ffff00', '#ff6b6b', '#4d96ff', '#06d6a0'];
+        for (let i = 0; i < 100; i++) {
+          c.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+          c.globalAlpha = Math.random() * 0.8 + 0.2;
+          const x = Math.random() * w;
+          const y = Math.random() * h;
+          const r = Math.random() * 3 + 1;
+          c.beginPath();
+          c.arc(x, y, r, 0, Math.PI * 2);
+          c.fill();
+        }
+        c.globalAlpha = 1;
+      }
+    },
+    {
+      name: 'Nature Inspired',
+      draw: (canvas) => {
+        const c = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        c.fillStyle = '#06d6a0';
+        c.fillRect(0, 0, w, h);
+        c.fillStyle = '#0f0c29';
+        c.fillRect(0, h * 0.6, w, h * 0.4);
+        c.fillStyle = '#06d6a0';
+        for (let i = 0; i < 30; i++) {
+          const x = Math.random() * w;
+          const y = h * 0.6 + Math.random() * h * 0.4;
+          c.fillRect(x, y, 8, Math.random() * 30 + 10);
+        }
+        c.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        for (let i = 0; i < 50; i++) {
+          const x = Math.random() * w;
+          const y = Math.random() * h * 0.6;
+          c.beginPath();
+          c.arc(x, y, Math.random() * 4 + 1, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+    }
+  ];
+
+  // Render gallery
+  function renderGallery() {
+    galleryGrid.innerHTML = '';
+    designTemplates.forEach((template, idx) => {
+      const container = document.createElement('div');
+      container.className = 'gallery-item';
+      const thumbCanvas = document.createElement('canvas');
+      thumbCanvas.width = 120;
+      thumbCanvas.height = 120;
+      template.draw(thumbCanvas);
+      const label = document.createElement('div');
+      label.className = 'gallery-label';
+      label.textContent = template.name;
+      container.appendChild(thumbCanvas);
+      container.appendChild(label);
+      container.addEventListener('click', () => {
+        loadDesign(template);
+        galleryModal.setAttribute('hidden', '');
+      });
+      galleryGrid.appendChild(container);
+    });
+  }
+
+  function loadDesign(template) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    template.draw(canvas);
+    saveHistory();
+  }
 
   // Particle system
   class Particle {
@@ -393,6 +570,22 @@
   shortcutsModal.addEventListener('click', (e) => {
     if (e.target === shortcutsModal) {
       shortcutsModal.setAttribute('hidden', '');
+    }
+  });
+
+  // Gallery modal
+  galleryBtn.addEventListener('click', () => {
+    renderGallery();
+    galleryModal.removeAttribute('hidden');
+  });
+
+  closeGallery.addEventListener('click', () => {
+    galleryModal.setAttribute('hidden', '');
+  });
+
+  galleryModal.addEventListener('click', (e) => {
+    if (e.target === galleryModal) {
+      galleryModal.setAttribute('hidden', '');
     }
   });
 
