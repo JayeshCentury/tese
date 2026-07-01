@@ -1,86 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Something Good — small interactive demo</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main class="page">
-      <header class="hero">
-        <h1 class="title">Make Something Good</h1>
-        <p class="subtitle">A tiny interactive HTML demo — click the buttons and enjoy.</p>
-        <div class="controls">
-          <div class="left-controls">
-            <button id="surprise" class="btn primary">Surprise me</button>
-            <button id="themeToggle" class="btn">Toggle theme</button>
-            <button id="inspire" class="btn">Inspire me</button>
-            <button id="mysteryBtn" class="btn">Mystery Box</button>
-          </div>
-          <div class="right-controls">
-            <label class="clock" aria-hidden="false"><span id="clock">--:--</span></label>
-            <input id="accentPicker" type="color" title="Pick accent color" aria-label="Accent color picker" />
-          </div>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creativity Playground — Visual Canvas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <header class="logo">
+        <h1>Creativity</h1>
+        <p>Playground</p>
       </header>
 
-      <section class="cards">
-        <article class="card">
-          <h3>Fast</h3>
-          <p>Lightweight, no frameworks — just HTML/CSS/JS.</p>
-        </article>
-        <article class="card">
-          <h3>Responsive</h3>
-          <p>Looks great on phones, tablets, and desktops.</p>
-        </article>
-        <article class="card">
-          <h3>Playful</h3>
-          <p>Micro-interactions and a small confetti effect.</p>
-        </article>
-      </section>
-
-      <section class="quoteWrap">
-        <div id="quote" class="quote" aria-live="polite">Click "Inspire me" for a short thought.</div>
-      </section>
-
-      <footer class="foot">Made with care · Try the "Surprise me" button</footer>
-    </main>
-
-    <div id="confetti" aria-hidden="true"></div>
-
-    <div id="mysteryModal" class="modal" aria-hidden="true">
-      <div class="modal-inner">
-        <header class="modal-header">
-          <h2> Mystery Box</h2>
-          <div class="modal-actions">
-            <button id="tabArt" class="btn small">Art</button>
-            <button id="tabRiddle" class="btn small">Riddle</button>
-            <button id="tabDot" class="btn small">Find the Dot</button>
-            <button id="closeMystery" class="btn small">Close</button>
-          </div>
-        </header>
-        <section class="modal-body">
-          <div id="panelArt" class="panel">
-            <label>Enter a word (or leave blank): <input id="seedInput" placeholder="curiosity" /></label>
-            <canvas id="artCanvas" width="640" height="360"></canvas>
-            <div class="hint">Click the canvas to regenerate.</div>
-          </div>
-
-          <div id="panelRiddle" class="panel" hidden>
-            <div id="riddleText" class="riddle">I speak without a mouth and hear without ears. I have nobody, but I come alive with wind. What am I?</div>
-            <button id="revealRiddle" class="btn">Reveal answer</button>
-            <div id="riddleAnswer" class="answer" hidden>Echo</div>
-          </div>
-
-          <div id="panelDot" class="panel" hidden>
-            <div id="dotGame" class="dotGame" aria-label="Find the hidden dot"></div>
-            <div class="hint">One tiny dot is different — can you find and click it?</div>
-          </div>
-        </section>
+      <div class="controls-group">
+        <h3>Brush</h3>
+        <div class="brush-buttons">
+          <button class="brush-btn active" data-brush="pen" title="Pen">✏️ Pen</button>
+          <button class="brush-btn" data-brush="glow" title="Glow">✨ Glow</button>
+          <button class="brush-btn" data-brush="spray" title="Spray">💨 Spray</button>
+          <button class="brush-btn" data-brush="eraser" title="Eraser">🗑 Erase</button>
+        </div>
       </div>
-    </div>
 
-    <script src="script.js"></script>
-  </body>
+      <div class="controls-group">
+        <h3>Color</h3>
+        <div class="color-palette">
+          <input type="color" id="colorPicker" value="#ff6b6b" class="color-input" />
+          <div class="quick-colors">
+            <button class="color-btn" style="background: #ff6b6b" data-color="#ff6b6b"></button>
+            <button class="color-btn" style="background: #ffd166" data-color="#ffd166"></button>
+            <button class="color-btn" style="background: #06d6a0" data-color="#06d6a0"></button>
+            <button class="color-btn" style="background: #4d96ff" data-color="#4d96ff"></button>
+            <button class="color-btn" style="background: #b388ff" data-color="#b388ff"></button>
+            <button class="color-btn" style="background: #ff9de2" data-color="#ff9de2"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-group">
+        <h3>Size</h3>
+        <input type="range" id="brushSize" min="2" max="50" value="8" class="slider" />
+        <span id="sizeLabel">8px</span>
+      </div>
+
+      <div class="controls-group">
+        <h3>Effects</h3>
+        <button id="particleToggle" class="btn-effect active">Particles: ON</button>
+        <button id="smoothToggle" class="btn-effect">Smooth: ON</button>
+      </div>
+
+      <div class="controls-group">
+        <h3>Actions</h3>
+        <button id="clearBtn" class="btn-action">Clear Canvas</button>
+        <button id="downloadBtn" class="btn-action">Download</button>
+      </div>
+
+      <footer class="sidebar-footer">
+        <p>Draw freely.</p>
+        <p>Create beauty.</p>
+      </footer>
+    </aside>
+
+    <main class="workspace">
+      <canvas id="canvas"></canvas>
+      <div class="overlay-hint">Start drawing...</div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>

@@ -1,20 +1,29 @@
-# Something Good — interactive HTML demo
+# Creativity Playground — Interactive Visual Canvas
 
-Open `index.html` in your browser to see the demo.
+A modern, polished drawing application built with HTML5 Canvas. Draw freely with multiple brush types, particle effects, and a clean UI.
 
-Quick start (from the repository root):
+**Features:**
+- 4 brush types: Pen, Glow, Spray, Eraser
+- Particle effects system
+- Smooth & sharp line drawing modes
+- Custom color picker + quick color palette
+- Adjustable brush size
+- Download your creations as PNG
+- Responsive design with beautiful dark theme
+
+**How to use:**
 
 ```bash
-# open directly (Linux)
+# Open directly
 xdg-open index.html
 
-# or run a tiny HTTP server
+# Or run a local server
 python3 -m http.server 8000
-# then visit http://localhost:8000/
+# Visit http://localhost:8000/
 ```
 
-Features:
-- Responsive layout
-- Theme toggle (light/dark)
-- Playful confetti burst (click "Surprise me" or press `s`)
+Start drawing on the canvas. Try different brushes, colors, and effects. Click **Download** to save your artwork.
+
+Enjoy creating! 🎨
+
 # tese

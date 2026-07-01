@@ -1,197 +1,228 @@
 (() => {
-  const surprise = document.getElementById('surprise');
-  const themeToggle = document.getElementById('themeToggle');
-  const confettiRoot = document.getElementById('confetti');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const colorPicker = document.getElementById('colorPicker');
+  const brushSizeSlider = document.getElementById('brushSize');
+  const sizeLabel = document.getElementById('sizeLabel');
+  const clearBtn = document.getElementById('clearBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const particleToggle = document.getElementById('particleToggle');
+  const smoothToggle = document.getElementById('smoothToggle');
+  const overlayHint = document.querySelector('.overlay-hint');
+  const brushBtns = document.querySelectorAll('.brush-btn');
+  const colorBtns = document.querySelectorAll('.color-btn');
 
-  function createConfettiBurst(xRatio = Math.random(), count = 40) {
-    const colors = ['#ff6b6b','#ffd166','#06d6a0','#4d96ff','#b388ff','#ff9de2'];
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const x = Math.max(20, Math.min(w - 20, xRatio * w));
+  let isDrawing = false;
+  let lastX = 0, lastY = 0;
+  let currentBrush = 'pen';
+  let currentColor = '#ff6b6b';
+  let brushSize = 8;
+  let particlesEnabled = true;
+  let smoothEnabled = true;
+  let particles = [];
 
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement('div');
-      el.className = 'confetti-piece';
-      el.style.left = `${x}px`;
-      el.style.top = `${h * 0.15 + Math.random() * 40}px`;
-      el.style.background = colors[Math.floor(Math.random() * colors.length)];
-      el.style.transform = `translate3d(0,0,0) rotate(${Math.random()*360}deg)`;
-      confettiRoot.appendChild(el);
+  // Resize canvas
+  function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width - 40;
+    canvas.height = rect.height - 40;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
-      // animate
-      const dx = (Math.random() - 0.5) * 600;
-      const dy = 600 + Math.random() * 200;
-      const rotate = (Math.random() - 0.5) * 720;
-      el.animate([
-        { transform: `translate3d(0,0,0) rotate(${Math.random()*360}deg)`, opacity: 1 },
-        { transform: `translate3d(${dx}px, ${dy}px, 0) rotate(${rotate}deg)`, opacity: 0.1 }
-      ], { duration: 1100 + Math.random() * 800, easing: 'cubic-bezier(.2,.7,.3,1)' });
-
-      // cleanup
-      setTimeout(() => { try { el.remove() } catch (e) {} }, 2200);
+  // Particle system
+  class Particle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      this.vx = (Math.random() - 0.5) * 3;
+      this.vy = Math.random() * -2;
+      this.life = 1;
+      this.decay = Math.random() * 0.01 + 0.008;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += 0.08;
+      this.life -= this.decay;
+    }
+    draw(ctx) {
+      ctx.globalAlpha = this.life * 0.5;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
     }
   }
 
-  surprise.addEventListener('click', (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const xRatio = (rect.left + rect.width / 2) / window.innerWidth;
-    createConfettiBurst(xRatio, 48);
-  });
-
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    if (current === 'light') document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme','light');
-  });
-
-  // Clock
-  const clockEl = document.getElementById('clock');
-  function updateClock(){
-    const d = new Date();
-    const hh = String(d.getHours()).padStart(2,'0');
-    const mm = String(d.getMinutes()).padStart(2,'0');
-    clockEl.textContent = `${hh}:${mm}`;
-  }
-  updateClock();
-  setInterval(updateClock, 1000 * 30);
-
-  // Quotes
-  const quotes = [
-    "Simplicity is the soul of efficiency.",
-    "Small steps every day lead to big results.",
-    "Creativity loves constraints.",
-    "Ship often. Learn fast.",
-    "Good design is obvious. Great design is transparent.",
-  ];
-  const inspireBtn = document.getElementById('inspire');
-  const quoteEl = document.getElementById('quote');
-  function showQuote(){
-    const q = quotes[Math.floor(Math.random()*quotes.length)];
-    quoteEl.textContent = q;
-    showToast('New thought ✨');
-  }
-  inspireBtn.addEventListener('click', showQuote);
-
-  // Accent color picker
-  const accentPicker = document.getElementById('accentPicker');
-  const savedAccent = localStorage.getItem('accentColor');
-  if (savedAccent) document.documentElement.style.setProperty('--accent', savedAccent), accentPicker.value = savedAccent;
-  accentPicker.addEventListener('input', (e)=>{
-    const v = e.target.value;
-    document.documentElement.style.setProperty('--accent', v);
-    localStorage.setItem('accentColor', v);
-    showToast('Accent color updated');
-  });
-
-  // Animated background toggle when clicking the page
-  document.querySelector('.page').addEventListener('dblclick', ()=>{
-    document.querySelector('.page').classList.toggle('animated');
-    showToast('Background animation toggled');
-  });
-
-  // small toast helper
-  function showToast(text, ms = 2000){
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = text;
-    document.body.appendChild(t);
-    setTimeout(()=>{ t.style.opacity = '0'; try{t.remove()}catch(e){} }, ms);
-  }
-
-  // keyboard shortcut: press 's' for surprise
-  window.addEventListener('keydown', (ev) => {
-    if (ev.key === 's' || ev.key === 'S') {
-      createConfettiBurst(Math.random(), 36);
+  // Brush types
+  const brushes = {
+    pen: (x, y, color, size) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size;
+      ctx.stroke();
+      if (particlesEnabled && Math.random() > 0.4) {
+        particles.push(new Particle(x, y, color));
+      }
+    },
+    glow: (x, y, color, size) => {
+      ctx.shadowColor = color;
+      ctx.shadowBlur = size * 2;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size * 0.7;
+      ctx.stroke();
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      if (particlesEnabled) {
+        particles.push(new Particle(x, y, color));
+        particles.push(new Particle(x, y, color));
+      }
+    },
+    spray: (x, y, color, size) => {
+      for (let i = 0; i < 5; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * size * 0.8;
+        const px = x + Math.cos(angle) * distance;
+        const py = y + Math.sin(angle) * distance;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.7;
+        ctx.beginPath();
+        ctx.arc(px, py, Math.random() * 2 + 1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+      if (particlesEnabled && Math.random() > 0.6) {
+        particles.push(new Particle(x, y, color));
+      }
+    },
+    eraser: (x, y, color, size) => {
+      ctx.clearRect(x - size / 2, y - size / 2, size, size);
     }
-  });
+  };
 
-  // Mystery Box modal
-  const mysteryBtn = document.getElementById('mysteryBtn');
-  const mysteryModal = document.getElementById('mysteryModal');
-  const closeMystery = document.getElementById('closeMystery');
-  const tabArt = document.getElementById('tabArt');
-  const tabRiddle = document.getElementById('tabRiddle');
-  const tabDot = document.getElementById('tabDot');
-  const panelArt = document.getElementById('panelArt');
-  const panelRiddle = document.getElementById('panelRiddle');
-  const panelDot = document.getElementById('panelDot');
-
-  function openMystery(){
-    mysteryModal.removeAttribute('aria-hidden');
-    mysteryModal.style.display = 'flex';
-    showPanel('art');
-  }
-  function closeMyst(){
-    mysteryModal.setAttribute('aria-hidden','true');
-    mysteryModal.style.display = 'none';
-  }
-
-  mysteryBtn.addEventListener('click', openMystery);
-  closeMystery.addEventListener('click', closeMyst);
-  window.addEventListener('keydown', (e)=>{ if(e.key==='m' || e.key==='M') openMystery(); if(e.key==='Escape') closeMyst(); });
-
-  function showPanel(name){
-    panelArt.hidden = panelRiddle.hidden = panelDot.hidden = true;
-    if(name === 'art') panelArt.hidden = false;
-    if(name === 'riddle') panelRiddle.hidden = false;
-    if(name === 'dot') panelDot.hidden = false;
-  }
-  tabArt.addEventListener('click', ()=>showPanel('art'));
-  tabRiddle.addEventListener('click', ()=>showPanel('riddle'));
-  tabDot.addEventListener('click', ()=>showPanel('dot'));
-
-  // Generative art on canvas
-  const artCanvas = document.getElementById('artCanvas');
-  const seedInput = document.getElementById('seedInput');
-  const artCtx = artCanvas.getContext && artCanvas.getContext('2d');
-  function hashString(s){ let h=0; for(let i=0;i<s.length;i++){h = ((h<<5)-h) + s.charCodeAt(i); h |= 0;} return Math.abs(h);
-  }
-  function drawArt(seed){
-    if(!artCtx) return;
-    const w = artCanvas.width; const h = artCanvas.height;
-    artCtx.clearRect(0,0,w,h);
-    const base = seed || String(Date.now());
-    const s = hashString(base);
-    const cols = 6 + (s % 6);
-    for(let i=0;i<cols;i++){
-      const t = (s + i*31) % 360;
-      artCtx.fillStyle = `hsl(${t},60%,55%)`;
-      artCtx.beginPath();
-      const cx = w * (0.2 + 0.6 * Math.abs(Math.sin((s+i)*0.001)));
-      const cy = h * (0.3 + 0.4 * Math.abs(Math.cos((s+i)*0.001)));
-      const r = 30 + ((s >> i) & 127);
-      artCtx.arc(cx + (i-cols/2)*40, cy + Math.sin(i+ s*0.0001)*30, r, 0, Math.PI*2);
-      artCtx.fill();
+  function drawLine(fromX, fromY, toX, toY) {
+    if (smoothEnabled) {
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.bezierCurveTo(fromX, fromY, toX, toY, toX, toY);
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.lineTo(toX, toY);
     }
-    // overlay lines
-    artCtx.strokeStyle = 'rgba(255,255,255,0.08)'; artCtx.lineWidth = 1;
-    for(let i=0;i<60;i++){
-      artCtx.beginPath(); artCtx.moveTo(0, h*(i/60)); artCtx.lineTo(w, h*(i/60)); artCtx.stroke();
+    
+    const brush = brushes[currentBrush];
+    if (brush) {
+      brush(toX, toY, currentColor, brushSize);
     }
   }
-  artCanvas.addEventListener('click', ()=> drawArt(seedInput.value || String(Math.random())));
-  // initial draw
-  drawArt(seedInput.value || 'curiosity');
 
-  // Riddle reveal
-  const revealRiddle = document.getElementById('revealRiddle');
-  const riddleAnswer = document.getElementById('riddleAnswer');
-  revealRiddle.addEventListener('click', ()=>{ riddleAnswer.hidden = false; showToast('You found the answer!'); createConfettiBurst(Math.random(), 32); });
+  // Canvas events
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    lastX = e.clientX - rect.left;
+    lastY = e.clientY - rect.top;
+    overlayHint.classList.remove('show');
+  });
 
-  // Hidden dot game
-  const dotGame = document.getElementById('dotGame');
-  function makeDotGame(cols = 12, rows = 8){
-    dotGame.innerHTML = '';
-    const total = cols * rows;
-    const hiddenIndex = Math.floor(Math.random() * total);
-    for(let i=0;i<total;i++){
-      const d = document.createElement('div'); d.className = 'dot';
-      if(i === hiddenIndex){ d.classList.add('hiddenDot'); d.addEventListener('click', ()=>{ showToast('You found the tiny dot!'); createConfettiBurst(Math.random(), 40); closeMyst(); }); }
-      else d.addEventListener('click', ()=>{ d.style.transform = 'scale(0.95)'; setTimeout(()=>d.style.transform='scale(1)',200); });
-      dotGame.appendChild(d);
-    }
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    drawLine(lastX, lastY, x, y);
+    lastX = x;
+    lastY = y;
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    isDrawing = false;
+  });
+
+  // Controls
+  colorPicker.addEventListener('input', (e) => {
+    currentColor = e.target.value;
+  });
+
+  colorBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      currentColor = e.target.dataset.color;
+      colorPicker.value = currentColor;
+    });
+  });
+
+  brushBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      brushBtns.forEach((b) => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentBrush = e.target.dataset.brush;
+    });
+  });
+
+  brushSizeSlider.addEventListener('input', (e) => {
+    brushSize = parseInt(e.target.value);
+    sizeLabel.textContent = `${brushSize}px`;
+  });
+
+  particleToggle.addEventListener('click', () => {
+    particlesEnabled = !particlesEnabled;
+    particleToggle.textContent = `Particles: ${particlesEnabled ? 'ON' : 'OFF'}`;
+    particleToggle.classList.toggle('active');
+  });
+
+  smoothToggle.addEventListener('click', () => {
+    smoothEnabled = !smoothEnabled;
+    smoothToggle.textContent = `Smooth: ${smoothEnabled ? 'ON' : 'OFF'}`;
+    smoothToggle.classList.toggle('active');
+  });
+
+  clearBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles = [];
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `canvas-${Date.now()}.png`;
+    link.click();
+  });
+
+  // Animation loop for particles
+  function animate() {
+    particles = particles.filter((p) => p.life > 0);
+    particles.forEach((p) => {
+      p.update();
+      p.draw(ctx);
+    });
+    requestAnimationFrame(animate);
   }
-  makeDotGame();
+  animate();
 
+  // Show hint when hovering
+  canvas.addEventListener('mouseenter', () => {
+    if (particles.length === 0) overlayHint.classList.add('show');
+  });
 
+  canvas.addEventListener('mouseleave', () => {
+    overlayHint.classList.remove('show');
+  });
+
+  // Clear hint after first stroke
+  let firstStroke = true;
+  canvas.addEventListener('mousedown', () => {
+    if (firstStroke) {
+      overlayHint.classList.remove('show');
+      firstStroke = false;
+    }
+  });
 })();
