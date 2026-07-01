@@ -383,15 +383,17 @@
 
   // Shortcuts modal
   shortcutsBtn.addEventListener('click', () => {
-    shortcutsModal.hidden = false;
+    shortcutsModal.removeAttribute('hidden');
   });
 
   closeShortcuts.addEventListener('click', () => {
-    shortcutsModal.hidden = true;
+    shortcutsModal.setAttribute('hidden', '');
   });
 
   shortcutsModal.addEventListener('click', (e) => {
-    if (e.target === shortcutsModal) shortcutsModal.hidden = true;
+    if (e.target === shortcutsModal) {
+      shortcutsModal.setAttribute('hidden', '');
+    }
   });
 
   // Keyboard shortcuts
@@ -429,7 +431,7 @@
       downloadBtn.click();
     }
     if (e.key === 'Escape') {
-      shortcutsModal.hidden = true;
+      shortcutsModal.setAttribute('hidden', '');
     }
   });
 

@@ -328,6 +328,14 @@ html, body {
   backdrop-filter: blur(4px);
 }
 
+.modal[hidden] {
+  display: none !important;
+}
+
+[hidden] {
+  display: none !important;
+}
+
 .modal-content {
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(11, 18, 32, 0.98));
   padding: 24px;
