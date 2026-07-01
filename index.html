@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Something Good — small interactive demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1 class="title">Make Something Good</h1>
+        <p class="subtitle">A tiny interactive HTML demo — click the buttons and enjoy.</p>
+        <div class="controls">
+          <button id="surprise" class="btn primary">Surprise me</button>
+          <button id="themeToggle" class="btn">Toggle theme</button>
+        </div>
+      </header>
+
+      <section class="cards">
+        <article class="card">
+          <h3>Fast</h3>
+          <p>Lightweight, no frameworks — just HTML/CSS/JS.</p>
+        </article>
+        <article class="card">
+          <h3>Responsive</h3>
+          <p>Looks great on phones, tablets, and desktops.</p>
+        </article>
+        <article class="card">
+          <h3>Playful</h3>
+          <p>Micro-interactions and a small confetti effect.</p>
+        </article>
+      </section>
+
+      <footer class="foot">Made with care · Try the "Surprise me" button</footer>
+    </main>
+
+    <div id="confetti" aria-hidden="true"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
