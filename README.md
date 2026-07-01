@@ -1,15 +1,28 @@
-# Creativity Playground — Interactive Visual Canvas
+# Creativity Playground — Advanced Visual Canvas
 
-A modern, polished drawing application built with HTML5 Canvas. Draw freely with multiple brush types, particle effects, and a clean UI.
+A professional drawing application with advanced features like undo/redo, artistic brushes, color harmony suggestions, blend modes, and particle effects.
 
 **Features:**
-- 4 brush types: Pen, Glow, Spray, Eraser
-- Particle effects system
-- Smooth & sharp line drawing modes
-- Custom color picker + quick color palette
-- Adjustable brush size
-- Download your creations as PNG
-- Responsive design with beautiful dark theme
+- **6 brush types**: Pen, Glow, Watercolor, Calligraphy, Spray, Eraser
+- **Artistic controls**: Opacity, blend modes (multiply, screen, overlay, etc.)
+- **Color harmony generator**: Complementary, analogous, triadic color suggestions
+- **Smart history**: Full undo/redo with visual state management
+- **Visual aids**: Grid overlay toggle, smooth line modes
+- **Particle effects system**: Dynamic, responsive particles
+- **Keyboard shortcuts**: Quick access to all tools (Z=undo, C=clear, G=grid, etc.)
+- **Download artwork**: Save creations as PNG
+- **Modern UI**: Dark theme, responsive design
+
+**Keyboard Shortcuts:**
+- `Z` — Undo
+- `Shift+Z` — Redo
+- `C` — Clear Canvas
+- `G` — Toggle Grid
+- `P` — Pen Brush
+- `E` — Eraser
+- `[` / `]` — Decrease/Increase Brush Size
+- `D` — Download
+- `?` / Click Shortcuts — Show help
 
 **How to use:**
 
@@ -22,8 +35,15 @@ python3 -m http.server 8000
 # Visit http://localhost:8000/
 ```
 
-Start drawing on the canvas. Try different brushes, colors, and effects. Click **Download** to save your artwork.
+1. Start drawing on the canvas
+2. Switch brushes and colors easily
+3. Experiment with blend modes and opacity
+4. Use harmony suggestions for color inspiration
+5. Press `?` or click "Shortcuts" to see all keyboard commands
+6. Undo/Redo as much as you like
+7. Download your final artwork
 
-Enjoy creating! 🎨
+**Enjoy creating!** 🎨✨
+
 
 # tese
